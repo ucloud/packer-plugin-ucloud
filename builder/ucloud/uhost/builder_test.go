@@ -1,20 +1,22 @@
-package ebs
+package uhost
 
 import (
-	"testing"
-
 	"github.com/hashicorp/packer/packer"
+	"reflect"
+	"testing"
 )
 
-func testConfig() map[string]interface{} {
+func testBuilderConfig() map[string]interface{} {
 	return map[string]interface{}{
-		"access_key":    "foo",
-		"secret_key":    "bar",
-		"source_ami":    "foo",
-		"instance_type": "foo",
-		"region":        "us-east-1",
-		"ssh_username":  "root",
-		"ami_name":      "foo",
+		"public_key":        "foo",
+		"private_key":       "bar",
+		"project_id":        "foo",
+		"source_image_id":   "bar",
+		"availability_zone": "cn-bj2-02",
+		"instance_type":     "n-basic-2",
+		"region":            "cn-bj2",
+		"ssh_username":      "root",
+		"image_name":        "foo",
 	}
 }
 
@@ -29,7 +31,7 @@ func TestBuilder_ImplementsBuilder(t *testing.T) {
 func TestBuilder_Prepare_BadType(t *testing.T) {
 	b := &Builder{}
 	c := map[string]interface{}{
-		"access_key": []string{},
+		"public_key": []string{},
 	}
 
 	warnings, err := b.Prepare(c)
@@ -41,13 +43,12 @@ func TestBuilder_Prepare_BadType(t *testing.T) {
 	}
 }
 
-func TestBuilderPrepare_AMIName(t *testing.T) {
+func TestBuilderPrepare_ImageName(t *testing.T) {
 	var b Builder
-	config := testConfig()
+	config := testBuilderConfig()
 
 	// Test good
-	config["ami_name"] = "foo"
-	config["skip_region_validation"] = true
+	config["image_name"] = "foo"
 	warnings, err := b.Prepare(config)
 	if len(warnings) > 0 {
 		t.Fatalf("bad: %#v", warnings)
@@ -57,7 +58,7 @@ func TestBuilderPrepare_AMIName(t *testing.T) {
 	}
 
 	// Test bad
-	config["ami_name"] = "foo {{"
+	config["image_name"] = "foo {{"
 	b = Builder{}
 	warnings, err = b.Prepare(config)
 	if len(warnings) > 0 {
@@ -68,7 +69,7 @@ func TestBuilderPrepare_AMIName(t *testing.T) {
 	}
 
 	// Test bad
-	delete(config, "ami_name")
+	delete(config, "image_name")
 	b = Builder{}
 	warnings, err = b.Prepare(config)
 	if len(warnings) > 0 {
@@ -81,7 +82,7 @@ func TestBuilderPrepare_AMIName(t *testing.T) {
 
 func TestBuilderPrepare_InvalidKey(t *testing.T) {
 	var b Builder
-	config := testConfig()
+	config := testBuilderConfig()
 
 	// Add a random key
 	config["i_should_not_be_valid"] = true
@@ -94,13 +95,23 @@ func TestBuilderPrepare_InvalidKey(t *testing.T) {
 	}
 }
 
-func TestBuilderPrepare_InvalidShutdownBehavior(t *testing.T) {
+func TestBuilderPrepare_ImageDestinations(t *testing.T) {
 	var b Builder
-	config := testConfig()
-
-	// Test good
-	config["shutdown_behavior"] = "terminate"
-	config["skip_region_validation"] = true
+	config := testBuilderConfig()
+	config["image_copy_to_mappings"] = []map[string]interface{}{
+		{
+			"project_id":  "project1",
+			"region":      "region1",
+			"name":        "bar",
+			"description": "foo",
+		},
+		{
+			"project_id":  "project2",
+			"region":      "region2",
+			"name":        "foo",
+			"description": "bar",
+		},
+	}
 	warnings, err := b.Prepare(config)
 	if len(warnings) > 0 {
 		t.Fatalf("bad: %#v", warnings)
@@ -109,23 +120,20 @@ func TestBuilderPrepare_InvalidShutdownBehavior(t *testing.T) {
 		t.Fatalf("should not have error: %s", err)
 	}
 
-	// Test good
-	config["shutdown_behavior"] = "stop"
-	warnings, err = b.Prepare(config)
-	if len(warnings) > 0 {
-		t.Fatalf("bad: %#v", warnings)
-	}
-	if err != nil {
-		t.Fatalf("should not have error: %s", err)
-	}
-
-	// Test bad
-	config["shutdown_behavior"] = "foobar"
-	warnings, err = b.Prepare(config)
-	if len(warnings) > 0 {
-		t.Fatalf("bad: %#v", warnings)
-	}
-	if err == nil {
-		t.Fatal("should have error")
+	if !reflect.DeepEqual(b.config.ImageDestinations, []ImageDestination{
+		{
+			ProjectId:   "project1",
+			Region:      "region1",
+			Name:        "bar",
+			Description: "foo",
+		},
+		{
+			ProjectId:   "project2",
+			Region:      "region2",
+			Name:        "foo",
+			Description: "bar",
+		},
+	}) {
+		t.Fatalf("image_copy_mappings are not set properly, got: %#v", b.config.ImageDestinations)
 	}
 }
