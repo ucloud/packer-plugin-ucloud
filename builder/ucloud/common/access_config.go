@@ -1,4 +1,4 @@
-package uhost
+package common
 
 import (
 	"fmt"
@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/packer/template/interpolate"
 	"github.com/hashicorp/packer/version"
 	"github.com/ucloud/ucloud-sdk-go/services/uaccount"
+	"github.com/ucloud/ucloud-sdk-go/services/ufile"
 	"github.com/ucloud/ucloud-sdk-go/services/uhost"
 	"github.com/ucloud/ucloud-sdk-go/services/unet"
 	"github.com/ucloud/ucloud-sdk-go/services/vpc"
@@ -42,10 +43,11 @@ func (c *AccessConfig) Client() (*UCloudClient, error) {
 	cred.PrivateKey = c.PrivateKey
 
 	c.client = &UCloudClient{}
-	c.client.uhostconn = uhost.NewClient(&cfg, &cred)
-	c.client.unetconn = unet.NewClient(&cfg, &cred)
-	c.client.vpcconn = vpc.NewClient(&cfg, &cred)
-	c.client.uaccountconn = uaccount.NewClient(&cfg, &cred)
+	c.client.UHostConn = uhost.NewClient(&cfg, &cred)
+	c.client.UNetConn = unet.NewClient(&cfg, &cred)
+	c.client.VPCConn = vpc.NewClient(&cfg, &cred)
+	c.client.UAccountConn = uaccount.NewClient(&cfg, &cred)
+	c.client.UFileConn = ufile.NewClient(&cfg, &cred)
 
 	return c.client, nil
 }
@@ -137,7 +139,7 @@ func (c *AccessConfig) ValidateZone(region, zone string) error {
 
 func (c *AccessConfig) getSupportedProjectIds() ([]string, error) {
 	client, err := c.Client()
-	conn := client.uaccountconn
+	conn := client.UAccountConn
 	if err != nil {
 		return nil, err
 	}
@@ -150,7 +152,7 @@ func (c *AccessConfig) getSupportedProjectIds() ([]string, error) {
 
 	validProjectIds := make([]string, len(resp.ProjectSet))
 	for _, val := range resp.ProjectSet {
-		if !isStringIn(val.ProjectId, validProjectIds) {
+		if !IsStringIn(val.ProjectId, validProjectIds) {
 			validProjectIds = append(validProjectIds, val.ProjectId)
 		}
 	}
@@ -160,7 +162,7 @@ func (c *AccessConfig) getSupportedProjectIds() ([]string, error) {
 
 func (c *AccessConfig) getSupportedRegions() ([]string, error) {
 	client, err := c.Client()
-	conn := client.uaccountconn
+	conn := client.UAccountConn
 	if err != nil {
 		return nil, err
 	}
@@ -173,7 +175,7 @@ func (c *AccessConfig) getSupportedRegions() ([]string, error) {
 
 	validRegions := make([]string, len(resp.Regions))
 	for _, val := range resp.Regions {
-		if !isStringIn(val.Region, validRegions) {
+		if !IsStringIn(val.Region, validRegions) {
 			validRegions = append(validRegions, val.Region)
 		}
 	}
@@ -183,7 +185,7 @@ func (c *AccessConfig) getSupportedRegions() ([]string, error) {
 
 func (c *AccessConfig) getSupportedZones(region string) ([]string, error) {
 	client, err := c.Client()
-	conn := client.uaccountconn
+	conn := client.UAccountConn
 	if err != nil {
 		return nil, err
 	}
@@ -196,7 +198,7 @@ func (c *AccessConfig) getSupportedZones(region string) ([]string, error) {
 
 	validZones := make([]string, len(resp.Regions))
 	for _, val := range resp.Regions {
-		if val.Region == region && !isStringIn(val.Zone, validZones) {
+		if val.Region == region && !IsStringIn(val.Zone, validZones) {
 			validZones = append(validZones, val.Zone)
 		}
 

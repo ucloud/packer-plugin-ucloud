@@ -1,4 +1,4 @@
-package uhost
+package common
 
 import (
 	"testing"

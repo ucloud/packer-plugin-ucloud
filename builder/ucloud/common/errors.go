@@ -1,4 +1,4 @@
-package uhost
+package common
 
 import (
 	"fmt"
@@ -28,33 +28,33 @@ func (e *NotCompleteError) Error() string {
 	return e.message
 }
 
-func newNotFoundError(product, id string) error {
+func NewNotFoundError(product, id string) error {
 	return &NotFoundError{fmt.Sprintf("the %s %s is not found", product, id)}
 }
 
-func newExpectedStateError(product, id string) error {
+func NewExpectedStateError(product, id string) error {
 	return &ExpectedStateError{fmt.Sprintf("the %s %s not be expected state", product, id)}
 }
 
-func newNotCompleteError(product string) error {
+func NewNotCompleteError(product string) error {
 	return &NotCompleteError{fmt.Sprintf("%s is not completed", product)}
 }
 
-func isNotFoundError(err error) bool {
+func IsNotFoundError(err error) bool {
 	if _, ok := err.(*NotFoundError); ok {
 		return true
 	}
 	return false
 }
 
-func isExpectedStateError(err error) bool {
+func IsExpectedStateError(err error) bool {
 	if _, ok := err.(*ExpectedStateError); ok {
 		return true
 	}
 	return false
 }
 
-func isNotCompleteError(err error) bool {
+func IsNotCompleteError(err error) bool {
 	if _, ok := err.(*NotCompleteError); ok {
 		return true
 	}

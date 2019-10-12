@@ -1,4 +1,4 @@
-package uhost
+package common
 
 import (
 	"fmt"
@@ -39,7 +39,7 @@ func (c *RunConfig) Prepare(ctx *interpolate.Context) []error {
 
 	if c.InstanceType == "" {
 		errs = append(errs, fmt.Errorf("%q must be set", "instance_type"))
-	} else if _, err := parseInstanceType(c.InstanceType); err != nil {
+	} else if _, err := ParseInstanceType(c.InstanceType); err != nil {
 		errs = append(errs, err)
 	}
 
@@ -49,7 +49,7 @@ func (c *RunConfig) Prepare(ctx *interpolate.Context) []error {
 
 	if c.BootDiskType == "" {
 		c.BootDiskType = "cloud_ssd"
-	} else if err := checkStringIn(c.BootDiskType,
+	} else if err := CheckStringIn(c.BootDiskType,
 		[]string{"local_normal", "local_ssd", "cloud_ssd"}); err != nil {
 		errs = append(errs, err)
 	}

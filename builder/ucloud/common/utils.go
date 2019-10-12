@@ -1,4 +1,4 @@
-package uhost
+package common
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func checkStringIn(val string, available []string) error {
+func CheckStringIn(val string, available []string) error {
 	for _, choice := range available {
 		if val == choice {
 			return nil
@@ -18,7 +18,7 @@ func checkStringIn(val string, available []string) error {
 	return fmt.Errorf("should be one of %q, got %q", strings.Join(available, ","), val)
 }
 
-func checkIntIn(val int, available []int) error {
+func CheckIntIn(val int, available []int) error {
 	for _, choice := range available {
 		if val == choice {
 			return nil
@@ -28,7 +28,7 @@ func checkIntIn(val int, available []int) error {
 	return fmt.Errorf("should be one of %v, got %d", available, val)
 }
 
-func isStringIn(val string, available []string) bool {
+func IsStringIn(val string, available []string) bool {
 	for _, choice := range available {
 		if val == choice {
 			return true
@@ -46,7 +46,7 @@ func SSHHost(usePrivateIp bool) func(multistep.StateBag) (string, error) {
 		var privateIp, publicIp string
 
 		for _, v := range instance.IPSet {
-			if v.Type == ipTypePrivate {
+			if v.Type == IpTypePrivate {
 				privateIp = v.IP
 			} else {
 				publicIp = v.IP
@@ -61,7 +61,7 @@ func SSHHost(usePrivateIp bool) func(multistep.StateBag) (string, error) {
 	}
 }
 
-func halt(state multistep.StateBag, err error, prefix string) multistep.StepAction {
+func Halt(state multistep.StateBag, err error, prefix string) multistep.StepAction {
 	ui := state.Get("ui").(packer.Ui)
 
 	if prefix != "" {

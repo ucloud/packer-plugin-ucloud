@@ -1,4 +1,4 @@
-package uhost
+package common
 
 import (
 	"github.com/hashicorp/packer/packer"
@@ -13,14 +13,14 @@ func TestArtifact_Impl(t *testing.T) {
 func TestArtifactId(t *testing.T) {
 	expected := `project1:region1:foo,project2:region2:bar`
 
-	images := newImageInfoSet(nil)
-	images.Set(imageInfo{
+	images := NewImageInfoSet(nil)
+	images.Set(ImageInfo{
 		Region:    "region1",
 		ProjectId: "project1",
 		ImageId:   "foo",
 	})
 
-	images.Set(imageInfo{
+	images.Set(ImageInfo{
 		Region:    "region2",
 		ProjectId: "project2",
 		ImageId:   "bar",
@@ -37,14 +37,14 @@ func TestArtifactId(t *testing.T) {
 }
 
 func TestArtifactState_atlasMetadata(t *testing.T) {
-	images := newImageInfoSet(nil)
-	images.Set(imageInfo{
+	images := NewImageInfoSet(nil)
+	images.Set(ImageInfo{
 		Region:    "region1",
 		ProjectId: "project1",
 		ImageId:   "foo",
 	})
 
-	images.Set(imageInfo{
+	images.Set(ImageInfo{
 		Region:    "region2",
 		ProjectId: "project2",
 		ImageId:   "bar",

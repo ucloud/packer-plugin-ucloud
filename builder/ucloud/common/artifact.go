@@ -1,4 +1,4 @@
-package uhost
+package common
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 )
 
 type Artifact struct {
-	UCloudImages *imageInfoSet
+	UCloudImages *ImageInfoSet
 
 	BuilderIdValue string
 
@@ -56,7 +56,7 @@ func (a *Artifact) State(name string) interface{} {
 }
 
 func (a *Artifact) Destroy() error {
-	conn := a.Client.uhostconn
+	conn := a.Client.UHostConn
 	errors := make([]error, 0)
 
 	for _, v := range a.UCloudImages.GetAll() {

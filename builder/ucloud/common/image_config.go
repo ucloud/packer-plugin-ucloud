@@ -1,6 +1,6 @@
 //go:generate mapstructure-to-hcl2 -type ImageDestination
 
-package uhost
+package common
 
 import (
 	"fmt"
