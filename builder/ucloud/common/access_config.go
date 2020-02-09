@@ -1,16 +1,19 @@
-package uhost
+package common
 
 import (
 	"fmt"
+	"net/url"
+	"os"
+
 	"github.com/hashicorp/packer/template/interpolate"
 	"github.com/hashicorp/packer/version"
 	"github.com/ucloud/ucloud-sdk-go/services/uaccount"
+	"github.com/ucloud/ucloud-sdk-go/services/ufile"
 	"github.com/ucloud/ucloud-sdk-go/services/uhost"
 	"github.com/ucloud/ucloud-sdk-go/services/unet"
 	"github.com/ucloud/ucloud-sdk-go/services/vpc"
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
-	"os"
 )
 
 type AccessConfig struct {
@@ -18,6 +21,7 @@ type AccessConfig struct {
 	PrivateKey string `mapstructure:"private_key"`
 	Region     string `mapstructure:"region"`
 	ProjectId  string `mapstructure:"project_id"`
+	BaseUrl    string `mapstructure:"base_url"`
 
 	client *UCloudClient
 }
@@ -30,17 +34,23 @@ func (c *AccessConfig) Client() (*UCloudClient, error) {
 	cfg := ucloud.NewConfig()
 	cfg.Region = c.Region
 	cfg.ProjectId = c.ProjectId
+	if c.BaseUrl != "" {
+		cfg.BaseUrl = c.BaseUrl
+	}
 	cfg.UserAgent = fmt.Sprintf("Packer-UCloud/%s", version.FormattedVersion())
+	// set default max retry count
+	cfg.MaxRetries = 3
 
 	cred := auth.NewCredential()
 	cred.PublicKey = c.PublicKey
 	cred.PrivateKey = c.PrivateKey
 
 	c.client = &UCloudClient{}
-	c.client.uhostconn = uhost.NewClient(&cfg, &cred)
-	c.client.unetconn = unet.NewClient(&cfg, &cred)
-	c.client.vpcconn = vpc.NewClient(&cfg, &cred)
-	c.client.uaccountconn = uaccount.NewClient(&cfg, &cred)
+	c.client.UHostConn = uhost.NewClient(&cfg, &cred)
+	c.client.UNetConn = unet.NewClient(&cfg, &cred)
+	c.client.VPCConn = vpc.NewClient(&cfg, &cred)
+	c.client.UAccountConn = uaccount.NewClient(&cfg, &cred)
+	c.client.UFileConn = ufile.NewClient(&cfg, &cred)
 
 	return c.client, nil
 }
@@ -57,6 +67,12 @@ func (c *AccessConfig) Prepare(ctx *interpolate.Context) []error {
 
 	if c.Region == "" {
 		errs = append(errs, fmt.Errorf("%q must be set", "region"))
+	}
+
+	if c.BaseUrl != "" {
+		if _, err := url.Parse(c.BaseUrl); err != nil {
+			errs = append(errs, fmt.Errorf("%q is invalid, should be an valid ucloud base_url, got %q, parse error: %s", "base_url", c.BaseUrl, err))
+		}
 	}
 
 	if len(errs) > 0 {
@@ -132,7 +148,7 @@ func (c *AccessConfig) ValidateZone(region, zone string) error {
 
 func (c *AccessConfig) getSupportedProjectIds() ([]string, error) {
 	client, err := c.Client()
-	conn := client.uaccountconn
+	conn := client.UAccountConn
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +161,7 @@ func (c *AccessConfig) getSupportedProjectIds() ([]string, error) {
 
 	validProjectIds := make([]string, len(resp.ProjectSet))
 	for _, val := range resp.ProjectSet {
-		if !isStringIn(val.ProjectId, validProjectIds) {
+		if !IsStringIn(val.ProjectId, validProjectIds) {
 			validProjectIds = append(validProjectIds, val.ProjectId)
 		}
 	}
@@ -155,7 +171,7 @@ func (c *AccessConfig) getSupportedProjectIds() ([]string, error) {
 
 func (c *AccessConfig) getSupportedRegions() ([]string, error) {
 	client, err := c.Client()
-	conn := client.uaccountconn
+	conn := client.UAccountConn
 	if err != nil {
 		return nil, err
 	}
@@ -168,7 +184,7 @@ func (c *AccessConfig) getSupportedRegions() ([]string, error) {
 
 	validRegions := make([]string, len(resp.Regions))
 	for _, val := range resp.Regions {
-		if !isStringIn(val.Region, validRegions) {
+		if !IsStringIn(val.Region, validRegions) {
 			validRegions = append(validRegions, val.Region)
 		}
 	}
@@ -178,7 +194,7 @@ func (c *AccessConfig) getSupportedRegions() ([]string, error) {
 
 func (c *AccessConfig) getSupportedZones(region string) ([]string, error) {
 	client, err := c.Client()
-	conn := client.uaccountconn
+	conn := client.UAccountConn
 	if err != nil {
 		return nil, err
 	}
@@ -191,7 +207,7 @@ func (c *AccessConfig) getSupportedZones(region string) ([]string, error) {
 
 	validZones := make([]string, len(resp.Regions))
 	for _, val := range resp.Regions {
-		if val.Region == region && !isStringIn(val.Zone, validZones) {
+		if val.Region == region && !IsStringIn(val.Zone, validZones) {
 			validZones = append(validZones, val.Zone)
 		}
 
