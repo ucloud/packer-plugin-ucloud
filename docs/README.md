@@ -1,13 +1,22 @@
-# Scaffolding Plugins
+# UCloud Plugins
 
-<!--
-  Include a short overview about the plugin.
+The UCloud plugin is able to build
+customized images based on an existing base image for use in UHost Instance.
 
-  This document is a great location for creating a table of contents for each
-  of the components the plugin may provide. This document should load automatically
-  when navigating to the docs directory for a plugin.
+## Components
 
--->
+The Scaffolding plugin is intended as a starting point for creating Packer plugins, containing:
+
+### Builders
+
+- [ucloud-uhost](/docs/builders/uhost.mdx) - The `ucloud-uhost` builder provides the capability to build
+  customized images based on an existing base image for use in UHost Instance.
+  
+### Post-processors
+
+- [ucloud-import](/docs/post-processors/import.mdx) - The UCloud Import post-processor takes the RAW, VHD, VMDK, or qcow2
+  artifact from various builders and imports it to UCloud customized image list
+  for UHost Instance.
 
 ## Installation
 
@@ -25,9 +34,9 @@ Then, run [`packer init`](https://www.packer.io/docs/commands/init).
 ```hcl
 packer {
   required_plugins {
-    name = {
+    ucloud = {
       version = ">= 0.0.1"
-      source  = "github.com/hashicorp/name"
+      source  = "github.com/hashicorp/ucloud"
     }
   }
 }
@@ -46,33 +55,7 @@ To install the plugin, please follow the Packer documentation on
 
 If you prefer to build the plugin from its source code, clone the GitHub
 repository locally and run the command `go build` from the root
-directory. Upon successful compilation, a `packer-plugin-name` plugin
+directory. Upon successful compilation, a `packer-plugin-ucloud` plugin
 binary file can be found in the root directory.
 To install the compiled plugin, please follow the official Packer documentation
 on [installing a plugin](https://www.packer.io/docs/extending/plugins/#installing-plugins).
-
-
-## Plugin Contents
-
-The Scaffolding plugin is intended as a starting point for creating Packer plugins, containing:
-
-### Builders
-
-- [builder](/docs/builders/builder-name.mdx) - The scaffolding builder is used to create endless Packer
-  plugins using a consistent plugin structure.
-
-### Provisioners
-
-- [provisioner](/docs/provisioners/provisioner-name.mdx) - The scaffolding provisioner is used to provisioner
-  Packer builds.
-
-### Post-processors
-
-- [post-processor](/docs/post-processors/postprocessor-name.mdx) - The scaffolding post-processor is used to
-  export scaffolding builds.
-
-### Data Sources
-
-- [data source](/docs/datasources/datasource-name.mdx) - The scaffolding data source is used to
-  export scaffolding data.
-

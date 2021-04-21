@@ -2,15 +2,15 @@ package uhost
 
 import (
 	"fmt"
-	"github.com/hashicorp/packer-plugin-sdk/acctest/testutils"
-	"github.com/stretchr/testify/assert"
 	"os"
 	"os/exec"
 	"strings"
 	"testing"
 
 	"github.com/hashicorp/packer-plugin-sdk/acctest"
+	"github.com/hashicorp/packer-plugin-sdk/acctest/testutils"
 	ucloudcommon "github.com/hashicorp/packer-plugin-ucloud/builder/ucloud/common"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestAccBuilder_validateRegion(t *testing.T) {
@@ -29,8 +29,8 @@ func TestAccBuilder_validateRegion(t *testing.T) {
 	access := &ucloudcommon.AccessConfig{Region: "cn-bj2"}
 	err = access.Config()
 	if err != nil {
+		t.Fatalf("Error on initing UCloud AccessConfig, %s", err)
 	}
-	t.Fatalf("Error on initing UCloud AccessConfig, %s", err)
 
 	err = access.ValidateRegion("cn-sh2")
 	if err != nil {

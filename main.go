@@ -6,6 +6,9 @@ import (
 
 	"github.com/hashicorp/packer-plugin-sdk/plugin"
 	"github.com/hashicorp/packer-plugin-sdk/version"
+	"github.com/hashicorp/packer-plugin-ucloud/builder/ucloud/common"
+	"github.com/hashicorp/packer-plugin-ucloud/builder/ucloud/uhost"
+	ucloudimport "github.com/hashicorp/packer-plugin-ucloud/post-processor/ucloud-import"
 )
 
 var (
@@ -24,7 +27,10 @@ var (
 
 func main() {
 	pps := plugin.NewSet()
+	pps.RegisterBuilder("uhost", new(uhost.Builder))
+	pps.RegisterPostProcessor("import", new(ucloudimport.PostProcessor))
 	pps.SetVersion(PluginVersion)
+	common.UcloudPluginVersion = PluginVersion
 	err := pps.Run()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())

@@ -118,9 +118,7 @@ func (c *RunConfig) Prepare(ctx *interpolate.Context) []error {
 	}
 
 	if c.Comm.SSHPassword != "" && len(validateInstancePassword(c.Comm.SSHPassword)) != 0 {
-		for _, v := range validateInstancePassword(c.Comm.SSHPassword) {
-			errs = append(errs, v)
-		}
+		errs = append(errs, validateInstancePassword(c.Comm.SSHPassword)...)
 	}
 
 	if c.UserData != "" && c.UserDataFile != "" {

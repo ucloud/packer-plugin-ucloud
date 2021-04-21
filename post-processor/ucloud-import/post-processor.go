@@ -353,7 +353,7 @@ func deleteFile(config *ufsdk.Config, keyName string) error {
 	if err != nil {
 		return fmt.Errorf("error on new deleting file, %s", err)
 	}
-	req.DeleteFile(keyName)
+	_ = req.DeleteFile(keyName)
 	if err != nil {
 		return fmt.Errorf("error on deleting file, %s", err)
 	}
