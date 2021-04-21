@@ -5,7 +5,7 @@ import (
 
 	"github.com/hashicorp/packer-plugin-sdk/multistep"
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
-	ucloudcommon "github.com/hashicorp/packer/builder/ucloud/common"
+	ucloudcommon "github.com/hashicorp/packer-plugin-ucloud/builder/ucloud/common"
 )
 
 type stepPreValidate struct {

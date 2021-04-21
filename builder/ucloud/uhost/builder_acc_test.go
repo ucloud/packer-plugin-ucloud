@@ -2,30 +2,35 @@ package uhost
 
 import (
 	"fmt"
+	"github.com/hashicorp/packer-plugin-sdk/acctest/testutils"
+	"github.com/stretchr/testify/assert"
 	"os"
+	"os/exec"
+	"strings"
 	"testing"
 
-	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
-	builderT "github.com/hashicorp/packer/acctest"
-	ucloudcommon "github.com/hashicorp/packer/builder/ucloud/common"
-	"github.com/stretchr/testify/assert"
+	"github.com/hashicorp/packer-plugin-sdk/acctest"
+	ucloudcommon "github.com/hashicorp/packer-plugin-ucloud/builder/ucloud/common"
 )
 
-func TestBuilderAcc_validateRegion(t *testing.T) {
+func TestAccBuilder_validateRegion(t *testing.T) {
 	t.Parallel()
 
-	if os.Getenv(builderT.TestEnvVar) == "" {
-		t.Skip(fmt.Sprintf("Acceptance tests skipped unless env '%s' set", builderT.TestEnvVar))
+	if os.Getenv(acctest.TestEnvVar) == "" {
+		t.Skip(fmt.Sprintf("Acceptance tests skipped unless env '%s' set", acctest.TestEnvVar))
 		return
 	}
 
-	testAccPreCheck(t)
+	err := testAccPreCheck()
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
 
 	access := &ucloudcommon.AccessConfig{Region: "cn-bj2"}
-	err := access.Config()
+	err = access.Config()
 	if err != nil {
-		t.Fatalf("Error on initing UCloud AccessConfig, %s", err)
 	}
+	t.Fatalf("Error on initing UCloud AccessConfig, %s", err)
 
 	err = access.ValidateRegion("cn-sh2")
 	if err != nil {
@@ -38,20 +43,27 @@ func TestBuilderAcc_validateRegion(t *testing.T) {
 	}
 }
 
-func TestBuilderAcc_basic(t *testing.T) {
+func TestAccBuilder_basic(t *testing.T) {
 	t.Parallel()
-	builderT.Test(t, builderT.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
-		Builder:  &Builder{},
+	testCase := &acctest.PluginTestCase{
+		Name:     "uhost_basic_test",
+		Setup:    testAccPreCheck,
 		Template: testBuilderAccBasic,
-	})
+		Check: func(buildCommand *exec.Cmd, logfile string) error {
+			if buildCommand.ProcessState != nil {
+				if buildCommand.ProcessState.ExitCode() != 0 {
+					return fmt.Errorf("Bad exit code. Logfile: %s", logfile)
+				}
+			}
+			return nil
+		},
+	}
+	acctest.TestPlugin(t, testCase)
 }
 
 const testBuilderAccBasic = `
 {	"builders": [{
-		"type": "test",
+		"type": "ucloud-uhost",
 		"region": "cn-bj2",
 		"availability_zone": "cn-bj2-02",
 		"instance_type": "n-basic-2",
@@ -61,20 +73,27 @@ const testBuilderAccBasic = `
 	}]
 }`
 
-func TestBuilderAcc_ubuntu(t *testing.T) {
+func TestAccBuilder_ubuntu(t *testing.T) {
 	t.Parallel()
-	builderT.Test(t, builderT.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
-		Builder:  &Builder{},
+	testCase := &acctest.PluginTestCase{
+		Name:     "uhost_ubuntu_test",
+		Setup:    testAccPreCheck,
 		Template: testBuilderAccUbuntu,
-	})
+		Check: func(buildCommand *exec.Cmd, logfile string) error {
+			if buildCommand.ProcessState != nil {
+				if buildCommand.ProcessState.ExitCode() != 0 {
+					return fmt.Errorf("Bad exit code. Logfile: %s", logfile)
+				}
+			}
+			return nil
+		},
+	}
+	acctest.TestPlugin(t, testCase)
 }
 
 const testBuilderAccUbuntu = `
 {	"builders": [{
-		"type": "test",
+		"type": "ucloud-uhost",
 		"region": "cn-bj2",
 		"availability_zone": "cn-bj2-02",
 		"instance_type": "n-basic-2",
@@ -84,28 +103,34 @@ const testBuilderAccUbuntu = `
 	}]
 }`
 
-func TestBuilderAcc_regionCopy(t *testing.T) {
+func TestAccBuilder_regionCopy(t *testing.T) {
 	t.Parallel()
 	projectId := os.Getenv("UCLOUD_PROJECT_ID")
-	builderT.Test(t, builderT.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
-		Builder:  &Builder{},
+	testCase := &acctest.PluginTestCase{
+		Name:     "uhost_ubuntu_test",
+		Setup:    testAccPreCheck,
 		Template: testBuilderAccRegionCopy(projectId),
-		Check: checkRegionCopy(
-			projectId,
-			[]ucloudcommon.ImageDestination{
-				{ProjectId: projectId, Region: "cn-sh2", Name: "packer-test-regionCopy-sh", Description: "test"},
-			}),
-	})
+		Check: func(buildCommand *exec.Cmd, logfile string) error {
+			if buildCommand.ProcessState != nil {
+				if buildCommand.ProcessState.ExitCode() != 0 {
+					return fmt.Errorf("Bad exit code. Logfile: %s", logfile)
+				}
+			}
+			return checkRegionCopy(
+				projectId,
+				[]ucloudcommon.ImageDestination{
+					{ProjectId: projectId, Region: "cn-sh2", Name: "packer-test-regionCopy-sh", Description: "test"},
+				})
+		},
+	}
+	acctest.TestPlugin(t, testCase)
 }
 
 func testBuilderAccRegionCopy(projectId string) string {
 	return fmt.Sprintf(`
 {
 	"builders": [{
-		"type": "test",
+		"type": "ucloud-uhost",
 		"region": "cn-bj2",
 		"availability_zone": "cn-bj2-02",
 		"instance_type": "n-basic-2",
@@ -118,81 +143,91 @@ func testBuilderAccRegionCopy(projectId string) string {
 			"name":			"packer-test-regionCopy-sh",
 			"description": 	"test"
 		}]
-	}]
+	}],
+	"post-processors": [
+		{
+		  "type": "manifest"
+		}
+	]
 }`, projectId)
 }
 
-func checkRegionCopy(projectId string, imageDst []ucloudcommon.ImageDestination) builderT.TestCheckFunc {
-	return func(artifacts []packersdk.Artifact) error {
-		if len(artifacts) > 1 {
-			return fmt.Errorf("more than 1 artifact")
-		}
-
-		artifactSet := artifacts[0]
-		artifact, ok := artifactSet.(*ucloudcommon.Artifact)
-		if !ok {
-			return fmt.Errorf("unknown artifact: %#v", artifactSet)
-		}
-
-		destSet := ucloudcommon.NewImageInfoSet(nil)
-		for _, dest := range imageDst {
-			destSet.Set(ucloudcommon.ImageInfo{
-				Region:    dest.Region,
-				ProjectId: dest.ProjectId,
-			})
-		}
-
-		for _, r := range artifact.UCloudImages.GetAll() {
-			if r.ProjectId == projectId && r.Region == "cn-bj2" {
-				destSet.Remove(r.Id())
-				continue
-			}
-
-			if destSet.Get(r.ProjectId, r.Region) == nil {
-				return fmt.Errorf("project%s : region%s is not the target but found in artifacts", r.ProjectId, r.Region)
-			}
-
-			destSet.Remove(r.Id())
-		}
-
-		if len(destSet.GetAll()) > 0 {
-			return fmt.Errorf("the following copying targets not found in corresponding artifacts : %#v", destSet.GetAll())
-		}
-
-		client, _ := testUCloudClient()
-		for _, r := range artifact.UCloudImages.GetAll() {
-			if r.ProjectId == projectId && r.Region == "cn-bj2" {
-				continue
-			}
-			imageSet, err := client.DescribeImageByInfo(r.ProjectId, r.Region, r.ImageId)
-			if err != nil {
-				if ucloudcommon.IsNotFoundError(err) {
-					return fmt.Errorf("image %s in artifacts can not be found", r.ImageId)
-				}
-				return err
-			}
-
-			if r.Region == "cn-sh2" && imageSet.ImageName != "packer-test-regionCopy-sh" {
-				return fmt.Errorf("the name of image %q in artifacts should be %s, got %s", r.ImageId, "packer-test-regionCopy-sh", imageSet.ImageName)
-			}
-		}
-
-		return nil
+func checkRegionCopy(projectId string, imageDst []ucloudcommon.ImageDestination) error {
+	manifest, err := testutils.GetArtifact("packer-manifest.json")
+	if err != nil {
+		return err
 	}
+
+	destSet := ucloudcommon.NewImageInfoSet(nil)
+	for _, dest := range imageDst {
+		destSet.Set(ucloudcommon.ImageInfo{
+			Region:    dest.Region,
+			ProjectId: dest.ProjectId,
+		})
+	}
+
+	id := manifest.Builds[0].ArtifactId
+	ucloudImages := strings.Split(id, ",")
+	for _, r := range ucloudImages {
+		info := strings.Split(r, ":")
+		projId := info[0]
+		region := info[1]
+		imageId := info[2]
+		if projId == projectId && region == "cn-bj2" {
+			destSet.Remove(imageId)
+			continue
+		}
+
+		if destSet.Get(projId, region) == nil {
+			return fmt.Errorf("project%s : region%s is not the target but found in artifacts", projId, region)
+		}
+
+		destSet.Remove(imageId)
+	}
+
+	if len(destSet.GetAll()) > 0 {
+		return fmt.Errorf("the following copying targets not found in corresponding artifacts : %#v", destSet.GetAll())
+	}
+
+	client, _ := testUCloudClient()
+	for _, r := range ucloudImages {
+		info := strings.Split(r, ":")
+		projId := info[0]
+		region := info[1]
+		imageId := info[2]
+
+		if projId == projectId && region == "cn-bj2" {
+			continue
+		}
+		imageSet, err := client.DescribeImageByInfo(projId, region, imageId)
+		if err != nil {
+			if ucloudcommon.IsNotFoundError(err) {
+				return fmt.Errorf("image %s in artifacts can not be found", imageId)
+			}
+			return err
+		}
+
+		if region == "cn-sh2" && imageSet.ImageName != "packer-test-regionCopy-sh" {
+			return fmt.Errorf("the name of image %q in artifacts should be %s, got %s", imageId, "packer-test-regionCopy-sh", imageSet.ImageName)
+		}
+	}
+
+	return nil
 }
 
-func testAccPreCheck(t *testing.T) {
+func testAccPreCheck() error {
 	if v := os.Getenv("UCLOUD_PUBLIC_KEY"); v == "" {
-		t.Fatal("UCLOUD_PUBLIC_KEY must be set for acceptance tests")
+		return fmt.Errorf("UCLOUD_PUBLIC_KEY must be set for acceptance tests")
 	}
 
 	if v := os.Getenv("UCLOUD_PRIVATE_KEY"); v == "" {
-		t.Fatal("UCLOUD_PRIVATE_KEY must be set for acceptance tests")
+		return fmt.Errorf("UCLOUD_PRIVATE_KEY must be set for acceptance tests")
 	}
 
 	if v := os.Getenv("UCLOUD_PROJECT_ID"); v == "" {
-		t.Fatal("UCLOUD_PROJECT_ID must be set for acceptance tests")
+		return fmt.Errorf("UCLOUD_PROJECT_ID must be set for acceptance tests")
 	}
+	return nil
 }
 
 func TestUCloudClientBaseUrlConfigurable(t *testing.T) {

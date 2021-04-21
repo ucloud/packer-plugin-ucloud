@@ -17,7 +17,7 @@ import (
 	"github.com/hashicorp/packer-plugin-sdk/retry"
 	"github.com/hashicorp/packer-plugin-sdk/template/config"
 	"github.com/hashicorp/packer-plugin-sdk/template/interpolate"
-	ucloudcommon "github.com/hashicorp/packer/builder/ucloud/common"
+	ucloudcommon "github.com/hashicorp/packer-plugin-ucloud/builder/ucloud/common"
 	"github.com/ucloud/ucloud-sdk-go/services/ufile"
 	"github.com/ucloud/ucloud-sdk-go/services/uhost"
 	"github.com/ucloud/ucloud-sdk-go/ucloud"

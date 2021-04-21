@@ -4,7 +4,7 @@ package uhost
 
 import (
 	"github.com/hashicorp/hcl/v2/hcldec"
-	"github.com/hashicorp/packer/builder/ucloud/common"
+	"github.com/hashicorp/packer-plugin-ucloud/builder/ucloud/common"
 	"github.com/zclconf/go-cty/cty"
 )
 
