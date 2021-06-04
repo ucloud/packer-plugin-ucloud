@@ -11,7 +11,7 @@ import (
 	"runtime"
 
 	"github.com/hashicorp/packer-plugin-sdk/template/interpolate"
-	"github.com/hashicorp/packer-plugin-sdk/version"
+	"github.com/hashicorp/packer-plugin-ucloud/version"
 	"github.com/ucloud/ucloud-sdk-go/external"
 	"github.com/ucloud/ucloud-sdk-go/private/protocol/http"
 	"github.com/ucloud/ucloud-sdk-go/services/uaccount"
@@ -23,8 +23,6 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/ucloud/auth"
 	"github.com/ucloud/ucloud-sdk-go/ucloud/log"
 )
-
-var UcloudPluginVersion *version.PluginVersion
 
 type AccessConfig struct {
 	// This is the UCloud public key. It must be provided unless `profile` is set,
@@ -70,7 +68,7 @@ func (c *AccessConfig) Client() (*UCloudClient, error) {
 		cfg.BaseUrl = c.BaseUrl
 	}
 	cfg.LogLevel = log.PanicLevel
-	cfg.UserAgent = fmt.Sprintf("Packer-UCloud/%s", UcloudPluginVersion.FormattedVersion())
+	cfg.UserAgent = fmt.Sprintf("Packer-UCloud/%s", version.PluginVersion.FormattedVersion())
 	// set default max retry count
 	cfg.MaxRetries = 3
 

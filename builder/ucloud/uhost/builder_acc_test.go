@@ -10,8 +10,8 @@ import (
 	"github.com/hashicorp/packer-plugin-sdk/acctest"
 	"github.com/hashicorp/packer-plugin-sdk/acctest/testutils"
 	"github.com/hashicorp/packer-plugin-sdk/version"
-	"github.com/hashicorp/packer-plugin-ucloud/builder/ucloud/common"
 	ucloudcommon "github.com/hashicorp/packer-plugin-ucloud/builder/ucloud/common"
+	pluginVersion "github.com/hashicorp/packer-plugin-ucloud/version"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -235,7 +235,7 @@ func testAccPreCheck() error {
 func TestUCloudClientBaseUrlConfigurable(t *testing.T) {
 	const url = "baseUrl"
 	access := &ucloudcommon.AccessConfig{BaseUrl: url, PublicKey: "test", PrivateKey: "test"}
-	common.UcloudPluginVersion = version.InitializePluginVersion("0.0.0", "dev")
+	pluginVersion.PluginVersion = version.InitializePluginVersion("0.0.0", "dev")
 	client, err := access.Client()
 	assert.Nil(t, err)
 	assert.Equal(t, url, client.UAccountConn.Client.GetConfig().BaseUrl, "account conn's base url not configurable")
