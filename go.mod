@@ -9,5 +9,5 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/ucloud/ucloud-sdk-go v0.20.2
 	github.com/ufilesdk-dev/ufile-gosdk v1.0.1
-	github.com/zclconf/go-cty v1.9.0
+	github.com/zclconf/go-cty v1.9.1
 )
