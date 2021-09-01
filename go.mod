@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/hashicorp/hcl/v2 v2.10.1
-	github.com/hashicorp/packer-plugin-sdk v0.2.3
+	github.com/hashicorp/packer-plugin-sdk v0.2.4
 	github.com/sirupsen/logrus v1.4.2 // indirect
 	github.com/stretchr/testify v1.7.0
 	github.com/ucloud/ucloud-sdk-go v0.20.2
