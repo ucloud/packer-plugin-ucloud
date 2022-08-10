@@ -1,4 +1,4 @@
-# Contributing to Ucloud Plugin
+# Contributing to UCloud Plugin
 
 **First:** if you're unsure or afraid of _anything_, just ask or submit the
 issue or pull request anyway. You won't be yelled at for giving your best
@@ -62,30 +62,30 @@ when addressing our team. For more reading on our code of conduct, please see th
 ## Setting up Go
 
 If you have never worked with Go before, you will have to install its
-runtime in order to build packer with the Ucloud plugin.
+runtime in order to build packer with the UCloud plugin.
 
 1. This project always releases from the latest version of golang.
 [Install go](https://golang.org/doc/install#install) To properly build from
-source, you need to have golang >= v1.17
+source, you need to have golang >= 1.17
 
-## Setting up Ucloud plugin for dev
+## Setting up UCloud plugin for dev
 
-With Go installed, you can already `go get` the Ucloud plugin and `make dev` in
+With Go installed, you can already `go get` the UCloud plugin and `make dev` in
 order to compile and test it. These instructions target
 POSIX-like environments (macOS, Linux, Cygwin, etc.) so you may need to
 adjust them for Windows or other shells.
 
-1. Download the Ucloud plugin source (and its dependencies) by running
+1. Download the UCloud plugin source (and its dependencies) by running
    `go get github.com/hashicorp/packer-plugin-ucloud`. This will download the source to
    `$GOPATH/src/github.com/hashicorp/packer-plugin-ucloud`.
 
-2. When working on the Ucloud plugin, first `cd $GOPATH/src/github.com/hashicorp/packer-plugin-ucloud`
+2. When working on the UCloud plugin, first `cd $GOPATH/src/github.com/hashicorp/packer-plugin-ucloud`
    so you can run `make dev` and easily access other files. `make dev` will build the packer-plugin-ucloud binary and install it under `$HOME/.packer.d/plugins/`.
 
-3. Make your changes to the Ucloud plugin source. You can run `make dev` to build and install locally, and `make test` to run unit tests.
+3. Make your changes to the UCloud plugin source. You can run `make dev` to build and install locally, and `make test` to run unit tests.
    Any compilation errors will be shown when the binaries are rebuilding. If you don't have `make` you can simply run `go build -o packer-plugin-ucloud` from the project root, and `mv packer-plugin-ucloud ~/.packer.d/plugins/packer-plugin-ucloud` to install the plugin.
 
-4. After building the Ucloud plugin successfully, use the latest version of Packer to build a machine and verify your changes. In the [example folder](https://github.com/hashicorp/packer-plugin-ucloud/blob/main/example) we provide a basic template. Comment out the `packer {}` block to force Packer use the development binary installed in the previous step.
+4. After building the UCloud plugin successfully, use the latest version of Packer to build a machine and verify your changes. In the [example folder](https://github.com/hashicorp/packer-plugin-ucloud/blob/main/example) we provide a basic template. Comment out the `packer {}` block to force Packer use the development binary installed in the previous step.
 
 5. If everything works well and the tests pass, run `go fmt ./...` on your code before
    submitting a pull-request.
@@ -94,7 +94,7 @@ adjust them for Windows or other shells.
 ### Opening a Pull Request
 
 Thank you for contributing! When you are ready to open a pull-request, you will
-need to [fork the Ucloud plugin](https://github.com/hashicorp/packer-plugin-ucloud#fork-destination-box), push your
+need to [fork the UCloud plugin](https://github.com/hashicorp/packer-plugin-ucloud#fork-destination-box), push your
 changes to your fork, and then open a pull-request.
 
 For example, my github username is `myuser`, so I would do the following:
@@ -117,7 +117,7 @@ From there, open your fork in your browser to open a new pull-request.
 2. Once you believe your pull request is ready to be merged, you can remove any
    "[WIP]" prefix from the title and a core team member will review.
 
-3. One of Ucloud plugin's core team members will look over your contribution and
+3. One of UCloud plugin's core team members will look over your contribution and
    either merge, or provide comments letting you know if there is anything left
    to do. We do our best to provide feedback in a timely manner, but it may take
    some time for us to respond. We may also have questions that we need answered
@@ -180,8 +180,8 @@ into the project.
 
 #### Working on forks
 
-The easiest way to work on a fork is to set it as a remote of the the Ucloud plugin
-project. After following the steps in "Setting up Go to work on the Ucloud plugin":
+The easiest way to work on a fork is to set it as a remote of the the UCloud plugin
+project. After following the steps in "Setting up Go to work on the UCloud plugin":
 
 1. Navigate to the code:
 
@@ -220,7 +220,7 @@ recommended but not required.
 Use `go get <project>` to add dependencies to the project. See [go mod quick
 start](https://github.com/golang/go/wiki/Modules#quick-start) for examples.
 
-Please only apply the minimal vendor changes to get your PR to work. The Ucloud plugin
+Please only apply the minimal vendor changes to get your PR to work. The UCloud plugin
 does not attempt to track the latest version for each dependency.
 
 #### HCL2 Spec code generation
@@ -240,7 +240,7 @@ from the plugin's project root.
 
 #### Running Builder Acceptance Tests
 
-If the Ucloud Plugin has [acceptance tests](https://en.wikipedia.org/wiki/Acceptance_testing), these probably have some requirements such as environment variables to be set for API tokens and keys. Each test should error and tell you what are missing, so those are not documented here.
+If the UCloud Plugin has [acceptance tests](https://en.wikipedia.org/wiki/Acceptance_testing), these probably have some requirements such as environment variables to be set for API tokens and keys. Each test should error and tell you what are missing, so those are not documented here.
 
 If you're working on a feature and want to verify it is functioning (and also hasn't broken anything else), we recommend creating or running the acceptance tests.
 
