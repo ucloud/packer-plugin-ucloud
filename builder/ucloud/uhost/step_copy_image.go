@@ -102,7 +102,7 @@ func (s *stepCopyUCloudImage) Run(ctx context.Context, state multistep.StateBag)
 		return ucloudcommon.Halt(state, err, fmt.Sprintf("Error on waiting for copying images %q to become available", strings.Join(s, ",")))
 	}
 
-	ui.Message(fmt.Sprintf("Copying image complete"))
+	ui.Message("Copying image complete")
 	return multistep.ActionContinue
 }
 
@@ -126,7 +126,7 @@ func (s *stepCopyUCloudImage) Cleanup(state multistep.StateBag) {
 	ui := state.Get("ui").(packersdk.Ui)
 	client := state.Get("client").(*ucloudcommon.UCloudClient)
 	conn := client.UHostConn
-	ui.Say(fmt.Sprintf("Deleting copied image because of cancellation or error..."))
+	ui.Say("Deleting copied image because of cancellation or error...")
 
 	for _, v := range imageInfos {
 		if v.ImageId == srcImageId {

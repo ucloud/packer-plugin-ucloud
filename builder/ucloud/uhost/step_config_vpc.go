@@ -35,7 +35,7 @@ func (s *stepConfigVPC) Run(ctx context.Context, state multistep.StateBag) multi
 
 	}
 
-	ui.Say(fmt.Sprintf("Trying to use default vpc..."))
+	ui.Say("Trying to use default vpc...")
 
 	return multistep.ActionContinue
 }
