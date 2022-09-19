@@ -19,7 +19,7 @@ func TestAccBuilder_validateRegion(t *testing.T) {
 	t.Parallel()
 
 	if os.Getenv(acctest.TestEnvVar) == "" {
-		t.Skip(fmt.Sprintf("Acceptance tests skipped unless env '%s' set", acctest.TestEnvVar))
+		t.Skipf("Acceptance tests skipped unless env '%s' set", acctest.TestEnvVar)
 		return
 	}
 

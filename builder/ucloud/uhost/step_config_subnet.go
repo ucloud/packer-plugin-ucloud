@@ -32,7 +32,7 @@ func (s *stepConfigSubnet) Run(ctx context.Context, state multistep.StateBag) mu
 		return multistep.ActionContinue
 	}
 
-	ui.Say(fmt.Sprintf("Trying to use default subnet..."))
+	ui.Say("Trying to use default subnet...")
 
 	return multistep.ActionContinue
 }
