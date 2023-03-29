@@ -4,7 +4,6 @@ BINARY=packer-plugin-${NAME}
 COUNT?=1
 TEST?=$(shell go list ./...)
 HASHICORP_PACKER_PLUGIN_SDK_VERSION?=$(shell go list -m github.com/hashicorp/packer-plugin-sdk | cut -d " " -f2)
-
 .PHONY: dev
 
 build:
@@ -32,5 +31,4 @@ testacc: dev
 
 generate: install-packer-sdc
 	@go generate ./...
-	packer-sdc renderdocs -src ./docs -dst ./.docs -partials ./docs-partials
 	# checkout the .docs folder for a preview of the docs
