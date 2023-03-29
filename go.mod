@@ -3,7 +3,7 @@ module github.com/ucloud/packer-plugin-ucloud
 go 1.18
 
 require (
-	github.com/hashicorp/hcl/v2 v2.13.0
+	github.com/hashicorp/hcl/v2 v2.16.2
 	github.com/hashicorp/packer-plugin-sdk v0.4.0
 	github.com/stretchr/testify v1.7.0
 	github.com/ucloud/ucloud-sdk-go v0.20.2
