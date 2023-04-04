@@ -1,6 +1,7 @@
 # Packer Plugin Ucloud
-The `Ucloud` multi-component plugin can be used with HashiCorp [Packer](https://www.packer.io)
-to create custom images. For the full list of available features for this plugin see [docs](docs).
+The `Ucloud` multi-component plugin can be used with HashiCorp
+[Packer](https://www.packer.io) to create custom images. For the full list of
+available features for this plugin see [docs](docs).
 
 ## Installation
 
@@ -19,8 +20,8 @@ Then, run [`packer init`](https://www.packer.io/docs/commands/init).
 packer {
   required_plugins {
     ucloud = {
-      version = ">= 1.0.2"
-      source  = "github.com/hashicorp/ucloud"
+      version = ">= 1.0.3"
+      source  = "github.com/ucloud/ucloud"
     }
   }
 }
@@ -29,11 +30,12 @@ packer {
 
 #### Manual installation
 
-You can find pre-built binary releases of the plugin [here](https://github.com/hashicorp/packer-plugin-ucloud/releases).
-Once you have downloaded the latest archive corresponding to your target OS,
-uncompress it to retrieve the plugin binary file corresponding to your platform.
-To install the plugin, please follow the Packer documentation on
-[installing a plugin](https://www.packer.io/docs/extending/plugins/#installing-plugins).
+You can find pre-built binary releases of the plugin
+[here](https://github.com/ucloud/packer-plugin-ucloud/releases). Once you have
+downloaded the latest archive corresponding to your target OS, uncompress it to
+retrieve the plugin binary file corresponding to your platform. To install the
+plugin, please follow the Packer documentation on [installing a
+plugin](https://www.packer.io/docs/extending/plugins/#installing-plugins).
 
 
 ### From Sources
@@ -61,3 +63,28 @@ documentation located in the [`docs/`](docs) directory.
   fix a bug, please do so by opening a Pull Request in this GitHub repository.
   In case of feature contribution, we kindly ask you to open an issue to
   discuss it beforehand.
+
+## GPG public key
+You may verify the released binaries with this GPG public key:
+
+    -----BEGIN PGP PUBLIC KEY BLOCK-----
+
+    mDMEZCbtBxYJKwYBBAHaRw8BAQdAzED5JgKHHe17uuPWzoU8IJRK0bqBF9S+KdVn
+    aCq1tg+0N0p1c3RpbiBaaGFuZyAoVUNsb3VkIHdvcmsgR1BHKSA8anVzdGluLnpo
+    YW5nQHVjbG91ZC5jbj6ImgQTFgoAQhYhBPi+ba2/BwN794NuPH7pFs0ifsLFBQJk
+    Ju0HAhsDBQkDwmcABQsJCAcCAyICAQYVCgkICwIEFgIDAQIeBwIXgAAKCRB+6RbN
+    In7CxTwnAQD739fTMO0e4LSvBYYqMT0OEel4/MYJMVXdftLB9CnfQAEAkel163cV
+    YCaW553KyQOJCI9aJSasopYju3lIUvkWfgGJATMEEAEIAB0WIQRFzhtgzKPwfHuQ
+    /nYgH5GJOOn1+gUCZCwziwAKCRAgH5GJOOn1+nG4CACT066mVIGq2dBPmf/7oNQS
+    JTZt1IdbYAkP3E7YhLolCDinDHjaw25JevR3iDIhPqqlaogrlIC2RBxsDg7zrv+q
+    SSEIkebW8BYYgc7K+1hpse4/V/jXJ1b+aFPKC3uvtQX8wU5bgOIctvhxl9agXHqd
+    MLtlbsGav0KGu65DElTLsoyEhaakWVatyGZ4tigc13o3CH6uUJCgaptYPc6J4p6N
+    we6q0s1FnNRYe3+ov+WvJvz+k2Qjr5o4n9HFajlueZcs1rAf6Eehpa/Imcp5NXCT
+    0q453b0atLykK567Xc9v+gRRsJtDXV+rHNV38eAHazfwrEyVapkQ/JGJtAPI1/5n
+    uDgEZCbtBxIKKwYBBAGXVQEFAQEHQLZykGFXbDtodQLzuIclSAK4//NnT6F3kXC5
+    M7flA55EAwEIB4h+BBgWCgAmFiEE+L5trb8HA3v3g248fukWzSJ+wsUFAmQm7QcC
+    GwwFCQPCZwAACgkQfukWzSJ+wsU9HwD+NAsTt8Odq4arxJd1t+bflUFqplvqbBwB
+    eXTsLTAKa2QBAI/ODojRoHtRU/rka6kiQJzFjN4nEINvoNyeem/PMaoE
+    =6uAG
+    -----END PGP PUBLIC KEY BLOCK-----
+

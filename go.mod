@@ -1,4 +1,4 @@
-module github.com/hashicorp/packer-plugin-ucloud
+module github.com/ucloud/packer-plugin-ucloud
 
 go 1.18
 
