@@ -35,7 +35,7 @@ Then, run [`packer init`](https://www.packer.io/docs/commands/init).
 packer {
   required_plugins {
     ucloud = {
-      version = ">= 1.0.7"
+      version = ">= 1.0.8"
       source  = "github.com/hashicorp/ucloud"
     }
   }
