@@ -15,7 +15,7 @@ import (
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
 	"github.com/hashicorp/packer-plugin-sdk/template/config"
 	"github.com/hashicorp/packer-plugin-sdk/template/interpolate"
-	ucloudcommon "github.com/hashicorp/packer-plugin-ucloud/builder/ucloud/common"
+	ucloudcommon "github.com/ucloud/packer-plugin-ucloud/builder/ucloud/common"
 )
 
 // The unique ID for this builder

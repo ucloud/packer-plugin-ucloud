@@ -11,7 +11,7 @@ The Scaffolding plugin is intended as a starting point for creating Packer plugi
 
 - [ucloud-uhost](/docs/builders/uhost.mdx) - The `ucloud-uhost` builder provides the capability to build
   customized images based on an existing base image for use in UHost Instance.
-  
+
 ### Post-processors
 
 - [ucloud-import](/docs/post-processors/import.mdx) - The UCloud Import post-processor takes the RAW, VHD, VMDK, or qcow2
@@ -35,7 +35,7 @@ Then, run [`packer init`](https://www.packer.io/docs/commands/init).
 packer {
   required_plugins {
     ucloud = {
-      version = ">= 1.0.0"
+      version = ">= 1.0.6"
       source  = "github.com/hashicorp/ucloud"
     }
   }

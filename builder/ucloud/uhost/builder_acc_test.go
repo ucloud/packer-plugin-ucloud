@@ -10,9 +10,9 @@ import (
 	"github.com/hashicorp/packer-plugin-sdk/acctest"
 	"github.com/hashicorp/packer-plugin-sdk/acctest/testutils"
 	"github.com/hashicorp/packer-plugin-sdk/version"
-	ucloudcommon "github.com/hashicorp/packer-plugin-ucloud/builder/ucloud/common"
-	pluginVersion "github.com/hashicorp/packer-plugin-ucloud/version"
 	"github.com/stretchr/testify/assert"
+	ucloudcommon "github.com/ucloud/packer-plugin-ucloud/builder/ucloud/common"
+	pluginVersion "github.com/ucloud/packer-plugin-ucloud/version"
 )
 
 func TestAccBuilder_validateRegion(t *testing.T) {

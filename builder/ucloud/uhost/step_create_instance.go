@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/packer-plugin-sdk/multistep"
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
 	"github.com/hashicorp/packer-plugin-sdk/retry"
-	ucloudcommon "github.com/hashicorp/packer-plugin-ucloud/builder/ucloud/common"
+	ucloudcommon "github.com/ucloud/packer-plugin-ucloud/builder/ucloud/common"
 	"github.com/ucloud/ucloud-sdk-go/services/uhost"
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
 )

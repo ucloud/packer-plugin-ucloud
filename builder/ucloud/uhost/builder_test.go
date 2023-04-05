@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
-	ucloudcommon "github.com/hashicorp/packer-plugin-ucloud/builder/ucloud/common"
+	ucloudcommon "github.com/ucloud/packer-plugin-ucloud/builder/ucloud/common"
 )
 
 func testBuilderConfig() map[string]interface{} {

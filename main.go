@@ -6,9 +6,9 @@ import (
 
 	"github.com/hashicorp/packer-plugin-sdk/plugin"
 
-	"github.com/hashicorp/packer-plugin-ucloud/builder/ucloud/uhost"
-	ucloudimport "github.com/hashicorp/packer-plugin-ucloud/post-processor/ucloud-import"
-	"github.com/hashicorp/packer-plugin-ucloud/version"
+	"github.com/ucloud/packer-plugin-ucloud/builder/ucloud/uhost"
+	ucloudimport "github.com/ucloud/packer-plugin-ucloud/post-processor/ucloud-import"
+	"github.com/ucloud/packer-plugin-ucloud/version"
 )
 
 func main() {

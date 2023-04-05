@@ -1,4 +1,6 @@
 main
 dist/*
 packer-plugin-scaffolding
+packer-plugin-ucloud
 .docs
+*.zip
