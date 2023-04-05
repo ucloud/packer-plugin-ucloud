@@ -53,6 +53,84 @@ on [installing a plugin](https://www.packer.io/docs/extending/plugins/#installin
 For more information on how to configure the plugin, please read the
 documentation located in the [`docs/`](docs) directory.
 
+## Usage Example
+
+Before you try the example in this section, you should get public, private key
+and project id from UCloud console and export the following environment varialbes:
+
+- `UCLOUD_PRIVATE_KEY`
+- `UCLOUD_PUBLIC_KEY`
+- `UCLOUD_PROJECT_ID`
+
+Then create a packer instruction file in HCL syntax as follows:
+
+
+    packer {
+      required_plugins {
+        ucloud = {
+          version = ">= 1.0.8"
+          source  = "github.com/ucloud/ucloud"
+        }
+      }
+    }
+
+    variable "ucloud_private_key" {
+      type    = string
+      default = "${env("UCLOUD_PRIVATE_KEY")}"
+    }
+
+    variable "ucloud_project_id" {
+      type    = string
+      default = "${env("UCLOUD_PROJECT_ID")}"
+    }
+
+    variable "ucloud_public_key" {
+      type    = string
+      default = "${env("UCLOUD_PUBLIC_KEY")}"
+    }
+
+    source "ucloud-uhost" "centos7-image-seed" {
+      availability_zone = "cn-sh2-02"
+      image_name        = "uk8s-centos-7.9"
+      instance_type     = "o-standard-2"
+      private_key       = "${var.ucloud_private_key}"
+      project_id        = "${var.ucloud_project_id}"
+      public_key        = "${var.ucloud_public_key}"
+      region            = "cn-sh2"
+      source_image_id   = "uimage-vj5ui3"
+      ssh_username      = "root"
+    }
+
+    build {
+      name = "UK8S-Centos7-BaseImage"
+      sources = ["source.ucloud-uhost.centos7-image-seed"]
+
+
+      provisioner "shell" {
+          inline = ["echo hello"]
+      }
+
+      provisioner "ansible" {
+        playbook_file = "./playbook-centos.yml"
+      }
+    }
+
+Name the file as `xxx.pkr.hcl` and run `packer init` command under the
+directory where the above file located:
+
+    packer init xxx.pkr.hcl
+
+Packer will install the required plugins automatically. Then you run packer to
+build the image for uhost. It is recommended that you enable the packer log to
+aid diagnosis if something goes wrong. You run commands as follows:
+
+
+    export UCLOUD_PRIVATE_KEY="****************"
+    export UCLOUD_PUBLIC_KEY="******************"
+    export UCLOUD_PROJECT_ID="xxx"
+    export PACKER_LOG=1
+    export PACKER_LOG_PATH="packer.log"
+    packer build xxx.pkr.hcl
 
 ## Contributing
 
