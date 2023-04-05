@@ -1,6 +1,6 @@
 module github.com/ucloud/packer-plugin-ucloud
 
-go 1.18
+go 1.20
 
 require (
 	github.com/hashicorp/hcl/v2 v2.16.2
