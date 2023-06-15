@@ -24,6 +24,11 @@ const (
 	DefaultCreateImageTimeout = 3600
 )
 
+const (
+	UK8sImageSize   = 40
+	UK8sImageOsType = "Linux"
+)
+
 var BootDiskTypeMap = NewStringConverter(map[string]string{
 	"cloud_ssd":    "CLOUD_SSD",
 	"local_normal": "LOCAL_NORMAL",

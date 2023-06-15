@@ -3,6 +3,7 @@ package uhost
 import (
 	"context"
 	"fmt"
+	"github.com/ucloud/ucloud-sdk-go/services/uhost"
 
 	"github.com/hashicorp/packer-plugin-sdk/multistep"
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
@@ -22,9 +23,21 @@ func (s *stepCheckSourceImageId) Run(ctx context.Context, state multistep.StateB
 	imageSet, err := client.DescribeImageById(s.SourceUHostImageId)
 	if err != nil {
 		if ucloudcommon.IsNotFoundError(err) {
-			return ucloudcommon.Halt(state, err, "")
+			uk8sNodeImage, uk8sErr := client.DescribeUK8sNodeImageById(s.SourceUHostImageId)
+			if ucloudcommon.IsNotFoundError(uk8sErr) {
+				return ucloudcommon.Halt(state, fmt.Errorf("fail to find source_image_id %q", s.SourceUHostImageId), "")
+			}
+			if uk8sErr != nil {
+				return ucloudcommon.Halt(state, uk8sErr, fmt.Sprintf("Error on querying specified source_image_id %q", s.SourceUHostImageId))
+			}
+			imageSet = &uhost.UHostImageSet{}
+			imageSet.ImageName = uk8sNodeImage.ImageName
+			imageSet.ImageSize = ucloudcommon.UK8sImageSize
+			imageSet.OsType = ucloudcommon.UK8sImageOsType
+			imageSet.Features = []string{"CloudInit"}
+		} else {
+			return ucloudcommon.Halt(state, err, fmt.Sprintf("Error on querying specified source_image_id %q", s.SourceUHostImageId))
 		}
-		return ucloudcommon.Halt(state, err, fmt.Sprintf("Error on querying specified source_image_id %q", s.SourceUHostImageId))
 	}
 
 	if imageSet.OsType == ucloudcommon.OsTypeWindows {

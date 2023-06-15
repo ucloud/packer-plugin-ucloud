@@ -10,6 +10,9 @@
   
   ~> **Note:** It takes around 10 mins for boot disk initialization when `boot_disk_type` is `local_normal` or `local_ssd`.
 
+- `boot_disk_size` (int) - The size of boot disk associated to UHost instance, which cannot be smaller than the size of source image.
+  The unit is `GB`. Default value is the size of source image.
+
 - `vpc_id` (string) - The ID of VPC linked to the UHost instance. If not defined `vpc_id`, the instance will use the default VPC in the current region.
 
 - `subnet_id` (string) - The ID of subnet under the VPC. If `vpc_id` is defined, the `subnet_id` is mandatory required.

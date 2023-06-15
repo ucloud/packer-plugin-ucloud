@@ -113,6 +113,7 @@ func (b *Builder) Run(ctx context.Context, ui packersdk.Ui, hook packersdk.Hook)
 			SourceImageId:  b.config.SourceImageId,
 			InstanceName:   b.config.InstanceName,
 			BootDiskType:   b.config.BootDiskType,
+			BootDiskSize:   b.config.BootDiskSize,
 			UsePrivateIp:   b.config.UseSSHPrivateIp,
 			EipBandwidth:   b.config.EipBandwidth,
 			EipChargeMode:  b.config.EipChargeMode,

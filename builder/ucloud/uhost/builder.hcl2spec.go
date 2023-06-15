@@ -35,6 +35,7 @@ type FlatConfig struct {
 	InstanceType              *string                       `mapstructure:"instance_type" required:"true" cty:"instance_type" hcl:"instance_type"`
 	InstanceName              *string                       `mapstructure:"instance_name" required:"false" cty:"instance_name" hcl:"instance_name"`
 	BootDiskType              *string                       `mapstructure:"boot_disk_type" required:"false" cty:"boot_disk_type" hcl:"boot_disk_type"`
+	BootDiskSize              *int                          `mapstructure:"boot_disk_size" required:"false" cty:"boot_disk_size" hcl:"boot_disk_size"`
 	VPCId                     *string                       `mapstructure:"vpc_id" required:"false" cty:"vpc_id" hcl:"vpc_id"`
 	SubnetId                  *string                       `mapstructure:"subnet_id" required:"false" cty:"subnet_id" hcl:"subnet_id"`
 	SecurityGroupId           *string                       `mapstructure:"security_group_id" required:"false" cty:"security_group_id" hcl:"security_group_id"`
@@ -131,6 +132,7 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 		"instance_type":                &hcldec.AttrSpec{Name: "instance_type", Type: cty.String, Required: false},
 		"instance_name":                &hcldec.AttrSpec{Name: "instance_name", Type: cty.String, Required: false},
 		"boot_disk_type":               &hcldec.AttrSpec{Name: "boot_disk_type", Type: cty.String, Required: false},
+		"boot_disk_size":               &hcldec.AttrSpec{Name: "boot_disk_size", Type: cty.Number, Required: false},
 		"vpc_id":                       &hcldec.AttrSpec{Name: "vpc_id", Type: cty.String, Required: false},
 		"subnet_id":                    &hcldec.AttrSpec{Name: "subnet_id", Type: cty.String, Required: false},
 		"security_group_id":            &hcldec.AttrSpec{Name: "security_group_id", Type: cty.String, Required: false},

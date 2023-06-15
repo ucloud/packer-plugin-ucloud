@@ -3,6 +3,7 @@ package uhost
 import (
 	"context"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
@@ -23,6 +24,7 @@ type stepCreateInstance struct {
 	InstanceType  string
 	InstanceName  string
 	BootDiskType  string
+	BootDiskSize  int
 	SourceImageId string
 	UsePrivateIp  bool
 
@@ -281,6 +283,12 @@ func (s *stepCreateInstance) buildCreateInstanceRequest(state multistep.StateBag
 	bootDisk := uhost.UHostDisk{}
 	bootDisk.IsBoot = ucloud.String("true")
 	bootDisk.Size = ucloud.Int(srcImage.ImageSize)
+	if s.BootDiskSize > 0 {
+		if s.BootDiskSize < srcImage.ImageSize {
+			return nil, errors.New("boot disk size should not be smaller than image size")
+		}
+		bootDisk.Size = ucloud.Int(s.BootDiskSize)
+	}
 	bootDisk.Type = ucloud.String(ucloudcommon.BootDiskTypeMap.Convert(s.BootDiskType))
 
 	req.Disks = append(req.Disks, bootDisk)

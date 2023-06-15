@@ -30,6 +30,9 @@ type RunConfig struct {
 	//
 	//~> **Note:** It takes around 10 mins for boot disk initialization when `boot_disk_type` is `local_normal` or `local_ssd`.
 	BootDiskType string `mapstructure:"boot_disk_type" required:"false"`
+	// The size of boot disk associated to UHost instance, which cannot be smaller than the size of source image.
+	// The unit is `GB`. Default value is the size of source image.
+	BootDiskSize int `mapstructure:"boot_disk_size" required:"false"`
 	// The ID of VPC linked to the UHost instance. If not defined `vpc_id`, the instance will use the default VPC in the current region.
 	VPCId string `mapstructure:"vpc_id" required:"false"`
 	// The ID of subnet under the VPC. If `vpc_id` is defined, the `subnet_id` is mandatory required.
