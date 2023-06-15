@@ -20,7 +20,7 @@ Then, run [`packer init`](https://www.packer.io/docs/commands/init).
 packer {
   required_plugins {
     ucloud = {
-      version = ">= 1.0.8"
+      version = ">= 1.0.9"
       source  = "github.com/ucloud/ucloud"
     }
   }
@@ -68,7 +68,7 @@ Then create a packer instruction file in HCL syntax as follows:
     packer {
       required_plugins {
         ucloud = {
-          version = ">= 1.0.8"
+          version = ">= 1.0.9"
           source  = "github.com/ucloud/ucloud"
         }
       }
