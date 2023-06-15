@@ -17,6 +17,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/uaccount"
 	"github.com/ucloud/ucloud-sdk-go/services/ufile"
 	"github.com/ucloud/ucloud-sdk-go/services/uhost"
+	"github.com/ucloud/ucloud-sdk-go/services/uk8s"
 	"github.com/ucloud/ucloud-sdk-go/services/unet"
 	"github.com/ucloud/ucloud-sdk-go/services/vpc"
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
@@ -122,7 +123,7 @@ func (c *AccessConfig) Client() (*UCloudClient, error) {
 	c.client.VPCConn = vpc.NewClient(&cfg, &cred)
 	c.client.UAccountConn = uaccount.NewClient(&cfg, &cred)
 	c.client.UFileConn = ufile.NewClient(&cfg, &cred)
-
+	c.client.UK8sConn = uk8s.NewClient(&cfg, &cred)
 	if cloudShellCredHandler != nil {
 		if err := c.client.UHostConn.AddHttpRequestHandler(cloudShellCredHandler); err != nil {
 			return nil, err
@@ -137,6 +138,9 @@ func (c *AccessConfig) Client() (*UCloudClient, error) {
 			return nil, err
 		}
 		if err := c.client.UFileConn.AddHttpRequestHandler(cloudShellCredHandler); err != nil {
+			return nil, err
+		}
+		if err := c.client.UK8sConn.AddHttpRequestHandler(cloudShellCredHandler); err != nil {
 			return nil, err
 		}
 	}

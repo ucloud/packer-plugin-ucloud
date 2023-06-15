@@ -4,6 +4,7 @@ import (
 	"github.com/ucloud/ucloud-sdk-go/services/uaccount"
 	"github.com/ucloud/ucloud-sdk-go/services/ufile"
 	"github.com/ucloud/ucloud-sdk-go/services/uhost"
+	"github.com/ucloud/ucloud-sdk-go/services/uk8s"
 	"github.com/ucloud/ucloud-sdk-go/services/unet"
 	"github.com/ucloud/ucloud-sdk-go/services/vpc"
 	"github.com/ucloud/ucloud-sdk-go/ucloud"
@@ -12,6 +13,7 @@ import (
 
 type UCloudClient struct {
 	UHostConn    *uhost.UHostClient
+	UK8sConn     *uk8s.UK8SClient
 	UNetConn     *unet.UNetClient
 	VPCConn      *vpc.VPCClient
 	UAccountConn *uaccount.UAccountClient
@@ -139,4 +141,25 @@ func (c *UCloudClient) DescribeImageByInfo(projectId, regionId, imageId string) 
 
 	return &resp.ImageSet[0], nil
 
+}
+
+func (c *UCloudClient) DescribeUK8sNodeImageById(imageId string) (*uk8s.ImageInfo, error) {
+	if imageId == "" {
+		return nil, NewNotFoundError("image", imageId)
+	}
+	req := c.UK8sConn.NewDescribeUK8SImageRequest()
+	resp, err := c.UK8sConn.DescribeUK8SImage(req)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(resp.ImageSet) < 1 {
+		return nil, NewNotFoundError("image", imageId)
+	}
+	for _, image := range resp.ImageSet {
+		if image.ImageId == imageId {
+			return &image, nil
+		}
+	}
+	return nil, NewNotFoundError("image", imageId)
 }
